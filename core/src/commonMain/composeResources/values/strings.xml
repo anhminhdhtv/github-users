@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="github_users">Github Users</string>
+    <string name="user_details">User Details</string>
+    <string name="follower">Follower</string>
+    <string name="following">Following</string>
+    <string name="blog">Blog</string>
+    <string name="retry_txt">The data retrieval process has failed. \nTo reload, pull to refresh.</string>
+</resources>
