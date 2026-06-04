@@ -30,33 +30,33 @@ class UserManagerImpl(
     override suspend fun fetchUser(
         itemPerPage: Int,
         since: Int
-    ): ListDataStruct<User> {
+    ): Result<ListDataStruct<User>> {
         // Fetch all users from local cache first time
         if (!isHasDbData) {
             userLocalRepo.getAllUsers().let {
                 if (it.isNotEmpty()) {
                     // Set flag to true if data exists in local cache
                     isHasDbData = true
-                    return ListDataStruct(
+                    return Result.success(ListDataStruct(
                         dataCapacity = Long.MAX_VALUE,
                         dataList = it,
                         itemPerPage = itemPerPage
-                    )
+                    ))
                 }
             }
         }
 
         // Fetch users from remote server if does not exist in local cache
-        val result = userRemoteRepo.fetchUser(itemPerPage, since) ?: emptyArray()
+        val result = userRemoteRepo.fetchUser(itemPerPage, since).getOrNull() ?: emptyArray()
         result.forEach {
             userLocalRepo.saveUser(it)
         }
 
-        return ListDataStruct(
+        return Result.success(ListDataStruct(
             dataCapacity = Long.MAX_VALUE,
             dataList = result.toList(),
             itemPerPage = itemPerPage
-        )
+        ))
     }
 
 
@@ -67,14 +67,16 @@ class UserManagerImpl(
      *
      * @return User in detail in success case, default User otherwise
      */
-    override suspend fun fetchUserDetail(userName: String): User {
+    override suspend fun fetchUserDetail(userName: String): Result<User> {
         val userLocal = userLocalRepo.getUser(userName = userName)
         if (userLocal != null && userLocal.isInDetail) {
-            return userLocal
+            return Result.success(userLocal)
         }
 
-        return userRemoteRepo.fetchUserDetail(userName)?.also {
+        val remoteUser = userRemoteRepo.fetchUserDetail(userName).getOrNull()?.also {
             userLocalRepo.saveUser(it, true)
-        } ?: userLocal ?: User()
+        } ?: return Result.failure(NoSuchElementException("User not found"))
+
+        return Result.success(remoteUser)
     }
 }

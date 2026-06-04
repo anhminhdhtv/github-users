@@ -12,7 +12,7 @@ interface IUserRemoteRepo {
      *
      * @return Array of User in success case, null otherwise
      */
-    suspend fun fetchUser(itemPerPage: Int, since: Int): Array<User>?
+    suspend fun fetchUser(itemPerPage: Int, since: Int): Result<Array<User>?>
 
     /**
      * Method to fetch user detail.
@@ -21,5 +21,5 @@ interface IUserRemoteRepo {
      *
      * @return User in detail in success case, null otherwise
      */
-    suspend fun fetchUserDetail(userName: String): User?
+    suspend fun fetchUserDetail(userName: String): Result<User?>
 }

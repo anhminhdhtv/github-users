@@ -7,8 +7,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class FetchUserUseCaseTest {
 
@@ -24,13 +24,13 @@ class FetchUserUseCaseTest {
             dataList = listOf(User(id = 1, username = "user1")),
             itemPerPage = 20
         )
-        coEvery { userManager.fetchUser(20, 0) } returns expectedResult
+        coEvery { userManager.fetchUser(20, 0) } returns Result.success(expectedResult)
 
         // When
         val result = fetchUserUseCase(config)
 
         // Then
-        assertEquals(expectedResult, result)
+        assertEquals(Result.success(expectedResult), result)
         coVerify(exactly = 1) { userManager.fetchUser(20, 0) }
     }
 }

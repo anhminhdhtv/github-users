@@ -16,16 +16,6 @@ internal fun Project.configureKotlinMultiplatform(
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
-
-    jvm()
-
-    wasmJs {
-        browser()
-        compilerOptions {
-            freeCompilerArgs.add("-Xwasm-kclass-fqn")
-        }
-    }
-
     listOf(iosX64(), iosArm64(), iosSimulatorArm64())
 
     applyDefaultHierarchyTemplate()

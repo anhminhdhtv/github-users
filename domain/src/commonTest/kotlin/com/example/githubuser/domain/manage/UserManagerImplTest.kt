@@ -5,11 +5,10 @@ import com.example.githubuser.data.repo.remote.IUserRemoteRepo
 import com.example.githubusers.core.model.User
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
 import kotlin.test.Test
+import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class UserManagerImplTest {
 
@@ -17,7 +16,7 @@ class UserManagerImplTest {
     private val userLocalRepo: IUserLocalRepo = mockk()
     private lateinit var userManager: UserManagerImpl
 
-    @Before
+    @BeforeTest
     fun setUp() {
         userManager = UserManagerImpl(userRemoteRepo, userLocalRepo)
     }
@@ -44,8 +43,10 @@ class UserManagerImplTest {
         val result = userManager.fetchUser(itemPerPage = 20, since = 0)
 
         // Then
-        assertEquals(localUsers, result.dataList)
-        assertEquals(20, result.itemPerPage)
+        assertTrue(result.isSuccess)
+        val dataStruct = result.getOrNull()
+        assertEquals(localUsers, dataStruct?.dataList)
+        assertEquals(20, dataStruct?.itemPerPage)
         coVerify(exactly = 1) { userLocalRepo.getAllUsers() }
         coVerify(exactly = 0) { userRemoteRepo.fetchUser(any(), any()) }
     }
@@ -55,14 +56,16 @@ class UserManagerImplTest {
         // Given
         every { userLocalRepo.getAllUsers() } returns emptyList()
         val remoteUsers = arrayOf(User(id = 2, username = "remote_user"))
-        coEvery { userRemoteRepo.fetchUser(20, 0) } returns remoteUsers
+        coEvery { userRemoteRepo.fetchUser(20, 0) } returns Result.success(remoteUsers)
         every { userLocalRepo.saveUser(any()) } just runs
 
         // When
         val result = userManager.fetchUser(itemPerPage = 20, since = 0)
 
         // Then
-        assertEquals(remoteUsers.toList(), result.dataList)
+        assertTrue(result.isSuccess)
+        val dataStruct = result.getOrNull()
+        assertEquals(remoteUsers.toList(), dataStruct?.dataList)
         coVerify(exactly = 1) { userLocalRepo.getAllUsers() }
         coVerify(exactly = 1) { userRemoteRepo.fetchUser(20, 0) }
         verify(exactly = 1) { userLocalRepo.saveUser(remoteUsers[0]) }
@@ -78,7 +81,8 @@ class UserManagerImplTest {
         val result = userManager.fetchUserDetail("john")
 
         // Then
-        assertEquals(localUser, result)
+        assertTrue(result.isSuccess)
+        assertEquals(localUser, result.getOrNull())
         coVerify(exactly = 0) { userRemoteRepo.fetchUserDetail(any()) }
     }
 
@@ -88,14 +92,15 @@ class UserManagerImplTest {
         val localUser = User(id = 1, username = "john", isInDetail = false)
         val remoteUserDetail = User(id = 1, username = "john", isInDetail = true, location = "San Francisco")
         every { userLocalRepo.getUser("john") } returns localUser
-        coEvery { userRemoteRepo.fetchUserDetail("john") } returns remoteUserDetail
+        coEvery { userRemoteRepo.fetchUserDetail("john") } returns Result.success(remoteUserDetail)
         every { userLocalRepo.saveUser(remoteUserDetail, true) } just runs
 
         // When
         val result = userManager.fetchUserDetail("john")
 
         // Then
-        assertEquals(remoteUserDetail, result)
+        assertTrue(result.isSuccess)
+        assertEquals(remoteUserDetail, result.getOrNull())
         coVerify(exactly = 1) { userRemoteRepo.fetchUserDetail("john") }
         verify(exactly = 1) { userLocalRepo.saveUser(remoteUserDetail, true) }
     }

@@ -64,13 +64,15 @@ class UsersViewModelImpl(
         val since = if (users.dataList.isEmpty()) 0 else users.dataList.last().id
         val config = FetchUserConfig(10, since)
 
-        runCatching {
-            fetchUserUseCase.invoke(config)
-        }.fold(
+        fetchUserUseCase.invoke(config).fold(
             onSuccess = {
+                _isHasFailure.value = false
                 _users.value = users.append(it)
             },
             onFailure = {
+                if (users.dataList.isEmpty()) {
+                    _isHasFailure.value = true
+                }
                 _isHasFailure.value = true
             }
         )

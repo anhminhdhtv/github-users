@@ -8,8 +8,8 @@ import com.example.githubuser.domain.manage.UserManager
 data class FetchUserConfig(val itemPerPage: Int, val since: Int)
 
 class FetchUserUseCase( val userManager: UserManager) :
-    UseCase<FetchUserConfig, ListDataStruct<User>>() {
-    override suspend fun invoke(input: FetchUserConfig): ListDataStruct<User> {
+    UseCase<FetchUserConfig, Result<ListDataStruct<User>>>() {
+    override suspend fun invoke(input: FetchUserConfig): Result<ListDataStruct<User>> {
         return userManager.fetchUser(input.itemPerPage, input.since)
     }
 }

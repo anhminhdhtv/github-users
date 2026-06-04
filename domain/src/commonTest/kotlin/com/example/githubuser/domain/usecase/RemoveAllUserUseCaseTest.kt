@@ -7,7 +7,7 @@ import io.mockk.runs
 import io.mockk.verify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Test
+import kotlin.test.Test
 
 class RemoveAllUserUseCaseTest {
 

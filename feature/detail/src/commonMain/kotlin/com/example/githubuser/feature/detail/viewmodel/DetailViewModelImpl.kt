@@ -47,7 +47,7 @@ class DetailViewModelImpl(val fetchUserDetailUseCase: FetchUserDetailUseCase) : 
             fetchUserDetailUseCase.invoke(userName)
         }.fold(
             onSuccess = {
-                _userDetail.value = it
+                _userDetail.value = it.getOrNull()
                 _isLoading.value = false
             },
             onFailure = {
