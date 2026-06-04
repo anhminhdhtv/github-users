@@ -16,7 +16,7 @@ kotlin {
             implementation(libs.coil.network.anroid)
         }
         commonMain.dependencies {
-            implementation(projects.core)
+            implementation(project(":core"))
 
             // koin dependencies for DI
             implementation(libs.koin.core)
@@ -49,7 +49,7 @@ kotlin {
 
 sqldelight {
     databases {
-        create("MyDatabase1") {
+        create("MyDatabase") {
             packageName.set("com.example.githubuser.data.cache")
         }
     }

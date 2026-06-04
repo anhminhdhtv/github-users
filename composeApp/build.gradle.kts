@@ -33,11 +33,11 @@ kotlin {
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
-            implementation(projects.core)
-            implementation(projects.data)
-            implementation(projects.domain)
-            implementation(projects.feature.users)
-            implementation(projects.feature.detail)
+            implementation(project(":core"))
+            implementation(project(":data"))
+            implementation(project(":domain"))
+            implementation(project(":feature:users"))
+            implementation(project(":feature:detail"))
 
             implementation(compose.material3)
             implementation(compose.components.resources)

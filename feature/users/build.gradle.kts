@@ -5,9 +5,9 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.core)
-            api(projects.domain)
-            api(projects.uiComponents)
+            api(project(":core"))
+            api(project(":domain"))
+            api(project(":ui-components"))
 
             // koin dependencies for DI
             implementation(libs.koin.core)

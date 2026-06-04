@@ -1,11 +1,11 @@
 package com.example.githubuser.data.local
 
 import com.example.githubusers.core.model.User
-import com.example.githubuser.data.cache.MyDatabase1
+import com.example.githubuser.data.cache.MyDatabase
 import com.example.githubuser.data.cache.UserDb
 
-class UserLocalImpl(db: MyDatabase1) : IUserLocal {
-    private val query = db.myDatabase1Queries
+class UserLocalImpl(db: MyDatabase) : IUserLocal {
+    private val query = db.myDatabaseQueries
 
     override fun getAllUsers(): List<UserDb> {
         return query.selectAll().executeAsList().sortedBy { it.id }

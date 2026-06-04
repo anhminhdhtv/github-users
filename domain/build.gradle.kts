@@ -4,8 +4,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.core)
-            api(projects.data)
+            api(project(":core"))
+            api(project(":data"))
 
             // koin dependencies for DI
             implementation(libs.koin.core)

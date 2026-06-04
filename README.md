@@ -1,6 +1,7 @@
 # Kotlin Multiplatform GitHub Users App
 
-A Kotlin Multiplatform (KMP) project targeting Android and iOS, showcasing shared business logic, modern architecture, local database caching, and offline support.
+A Kotlin Multiplatform (KMP) sample project targeting Android and iOS, designed as a reference implementation of **Clean Architecture**, **Dependency Injection**, and **Modularization**. It demonstrates how to share business logic, networking, and caching between platforms while keeping a clean separation of concerns and maintaining offline support.
+
 
 ## Features
 - **GitHub Users Directory**: Browse GitHub users with seamless pagination.
@@ -10,6 +11,7 @@ A Kotlin Multiplatform (KMP) project targeting Android and iOS, showcasing share
 - **Shared Architecture**: Multi-module setup with clean separation of concerns, dependency injection, and modern reactive streams.
 
 ---
+
 
 ## Technical Stack & Dependencies
 - **UI & Presentation**: [Compose Multiplatform](https://jb.gg/compose) for shared declarative UI.
@@ -43,7 +45,34 @@ This project follows a clean multi-module architecture to enforce separation of 
 ├── iosApp                        # Native iOS Xcode application project (SwiftUI wrapper)
 └── gradle                        # Version catalog (libs.versions.toml) and Gradle wrapper
 ```
+---
+### Module Graph
 
+```mermaid
+%%{
+  init: {
+    'theme': 'neutral'
+  }
+}%%
+
+graph LR
+  :composeApp --> :core
+  :composeApp --> :data
+  :composeApp --> :domain
+  :composeApp --> :feature:users
+  :composeApp --> :feature:detail
+  :feature:users --> :core
+  :feature:users --> :domain
+  :feature:users --> :ui-components
+  :ui-components --> :core
+  :ui-components --> :domain
+  :feature:detail --> :core
+  :feature:detail --> :domain
+  :feature:detail --> :ui-components
+  :domain --> :core
+  :domain --> :data
+  :data --> :core
+```
 ---
 
 ## Getting Started
@@ -56,7 +85,7 @@ This project follows a clean multi-module architecture to enforce separation of 
 
 ### Configure GitHub API Key
 The GitHub public API limits unauthenticated requests to 60 per hour. To avoid rate-limiting issues:
-1. Open the [DataModule.kt]() file.
+1. Open the [DataModule.kt](data/src/commonMain/kotlin/com/example/githubuser/data/di/DataModule.kt) file.
 2. Replace `GITHUB_APIKEY` with your personal GitHub token:
 ```kotlin
 const val GITHUB_APIKEY = "your_github_personal_access_token"

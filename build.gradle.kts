@@ -13,4 +13,10 @@ plugins {
     alias(libs.plugins.android.dynamic.feature) apply false
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.android.lint) apply false
+    alias(libs.plugins.modulegraph)
+}
+moduleGraphConfig {
+    readmePath.set("./README.md")
+    heading = "### Module Graph"
+    showFullPath = true
 }
