@@ -3,7 +3,14 @@ package com.example.githubuser.domain.manage
 import com.example.githubuser.data.repo.local.IUserLocalRepo
 import com.example.githubuser.data.repo.remote.IUserRemoteRepo
 import com.example.githubusers.core.model.User
-import io.mockk.*
+import dev.mokkery.answering.returns
+import dev.mokkery.mock
+import dev.mokkery.every
+import dev.mokkery.everySuspend
+import dev.mokkery.verify
+import dev.mokkery.verifySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.verify.VerifyMode.Companion.exactly
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.BeforeTest
@@ -12,8 +19,8 @@ import kotlin.test.assertTrue
 
 class UserManagerImplTest {
 
-    private val userRemoteRepo: IUserRemoteRepo = mockk()
-    private val userLocalRepo: IUserLocalRepo = mockk()
+    private val userRemoteRepo: IUserRemoteRepo = mock()
+    private val userLocalRepo: IUserLocalRepo = mock()
     private lateinit var userManager: UserManagerImpl
 
     @BeforeTest
@@ -24,13 +31,13 @@ class UserManagerImplTest {
     @Test
     fun `removeAllUsers should delegate to userLocalRepo`() {
         // Given
-        every { userLocalRepo.removeAllUsers() } just runs
+        every { userLocalRepo.removeAllUsers() } returns Unit
 
         // When
         userManager.removeALlUsers()
 
         // Then
-        verify(exactly = 1) { userLocalRepo.removeAllUsers() }
+        verify(exactly(1)) { userLocalRepo.removeAllUsers() }
     }
 
     @Test
@@ -47,8 +54,8 @@ class UserManagerImplTest {
         val dataStruct = result.getOrNull()
         assertEquals(localUsers, dataStruct?.dataList)
         assertEquals(20, dataStruct?.itemPerPage)
-        coVerify(exactly = 1) { userLocalRepo.getAllUsers() }
-        coVerify(exactly = 0) { userRemoteRepo.fetchUser(any(), any()) }
+        verify(exactly(1)) { userLocalRepo.getAllUsers() }
+        verifySuspend(exactly(0)) { userRemoteRepo.fetchUser(any(), any()) }
     }
 
     @Test
@@ -56,8 +63,8 @@ class UserManagerImplTest {
         // Given
         every { userLocalRepo.getAllUsers() } returns emptyList()
         val remoteUsers = arrayOf(User(id = 2, username = "remote_user"))
-        coEvery { userRemoteRepo.fetchUser(20, 0) } returns Result.success(remoteUsers)
-        every { userLocalRepo.saveUser(any()) } just runs
+        everySuspend { userRemoteRepo.fetchUser(20, 0) } returns Result.success(remoteUsers)
+        every { userLocalRepo.saveUser(any()) } returns Unit
 
         // When
         val result = userManager.fetchUser(itemPerPage = 20, since = 0)
@@ -66,9 +73,9 @@ class UserManagerImplTest {
         assertTrue(result.isSuccess)
         val dataStruct = result.getOrNull()
         assertEquals(remoteUsers.toList(), dataStruct?.dataList)
-        coVerify(exactly = 1) { userLocalRepo.getAllUsers() }
-        coVerify(exactly = 1) { userRemoteRepo.fetchUser(20, 0) }
-        verify(exactly = 1) { userLocalRepo.saveUser(remoteUsers[0]) }
+        verify(exactly(1)) { userLocalRepo.getAllUsers() }
+        verifySuspend(exactly(1)) { userRemoteRepo.fetchUser(20, 0) }
+        verify(exactly(1)) { userLocalRepo.saveUser(remoteUsers[0]) }
     }
 
     @Test
@@ -83,7 +90,7 @@ class UserManagerImplTest {
         // Then
         assertTrue(result.isSuccess)
         assertEquals(localUser, result.getOrNull())
-        coVerify(exactly = 0) { userRemoteRepo.fetchUserDetail(any()) }
+        verifySuspend(exactly(0)) { userRemoteRepo.fetchUserDetail(any()) }
     }
 
     @Test
@@ -92,8 +99,8 @@ class UserManagerImplTest {
         val localUser = User(id = 1, username = "john", isInDetail = false)
         val remoteUserDetail = User(id = 1, username = "john", isInDetail = true, location = "San Francisco")
         every { userLocalRepo.getUser("john") } returns localUser
-        coEvery { userRemoteRepo.fetchUserDetail("john") } returns Result.success(remoteUserDetail)
-        every { userLocalRepo.saveUser(remoteUserDetail, true) } just runs
+        everySuspend { userRemoteRepo.fetchUserDetail("john") } returns Result.success(remoteUserDetail)
+        every { userLocalRepo.saveUser(remoteUserDetail, true) } returns Unit
 
         // When
         val result = userManager.fetchUserDetail("john")
@@ -101,7 +108,7 @@ class UserManagerImplTest {
         // Then
         assertTrue(result.isSuccess)
         assertEquals(remoteUserDetail, result.getOrNull())
-        coVerify(exactly = 1) { userRemoteRepo.fetchUserDetail("john") }
-        verify(exactly = 1) { userLocalRepo.saveUser(remoteUserDetail, true) }
+        verifySuspend(exactly(1)) { userRemoteRepo.fetchUserDetail("john") }
+        verify(exactly(1)) { userLocalRepo.saveUser(remoteUserDetail, true) }
     }
 }

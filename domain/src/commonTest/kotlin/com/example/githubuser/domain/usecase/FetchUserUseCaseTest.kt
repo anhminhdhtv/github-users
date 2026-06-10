@@ -3,16 +3,18 @@ package com.example.githubuser.domain.usecase
 import com.example.githubuser.domain.manage.UserManager
 import com.example.githubusers.core.model.ListDataStruct
 import com.example.githubusers.core.model.User
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import dev.mokkery.answering.returns
+import dev.mokkery.everySuspend
+import dev.mokkery.mock
+import dev.mokkery.verify.VerifyMode.Companion.exactly
+import dev.mokkery.verifySuspend
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class FetchUserUseCaseTest {
 
-    private val userManager: UserManager = mockk()
+    private val userManager: UserManager = mock()
     private val fetchUserUseCase = FetchUserUseCase(userManager)
 
     @Test
@@ -24,13 +26,13 @@ class FetchUserUseCaseTest {
             dataList = listOf(User(id = 1, username = "user1")),
             itemPerPage = 20
         )
-        coEvery { userManager.fetchUser(20, 0) } returns Result.success(expectedResult)
+        everySuspend { userManager.fetchUser(20, 0) } returns Result.success(expectedResult)
 
         // When
         val result = fetchUserUseCase(config)
 
         // Then
         assertEquals(Result.success(expectedResult), result)
-        coVerify(exactly = 1) { userManager.fetchUser(20, 0) }
+        verifySuspend(exactly(1)) { userManager.fetchUser(20, 0) }
     }
 }

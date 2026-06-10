@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.android.lint) apply false
     alias(libs.plugins.modulegraph)
+    alias(libs.plugins.mokkery) apply false
 }
 moduleGraphConfig {
     readmePath.set("./README.md")

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.githubuser.kotlinMultiplatform)
+    alias(libs.plugins.mokkery)
 }
 kotlin {
     sourceSets {
@@ -15,7 +16,6 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.android.junit)
             implementation(libs.coroutines.test)
-            implementation(libs.mockk)
         }
     }
 }
