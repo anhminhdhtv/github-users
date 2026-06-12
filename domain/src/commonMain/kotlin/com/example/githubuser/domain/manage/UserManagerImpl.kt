@@ -17,6 +17,7 @@ class UserManagerImpl(
      */
     override fun removeALlUsers() {
         userLocalRepo.removeAllUsers()
+        isHasDbData = false
     }
 
     /**
@@ -33,33 +34,39 @@ class UserManagerImpl(
     ): Result<ListDataStruct<User>> {
         // Fetch all users from local cache first time
         if (!isHasDbData) {
-            userLocalRepo.getAllUsers().let {
-                if (it.isNotEmpty()) {
-                    // Set flag to true if data exists in local cache
-                    isHasDbData = true
-                    return Result.success(
-                        ListDataStruct(
+            val localUsers = userLocalRepo.getAllUsers()
+            if (localUsers.isNotEmpty()) {
+                // Set flag to true if data exists in local cache
+                isHasDbData = true
+                return Result.success(
+                    ListDataStruct(
                         dataCapacity = Long.MAX_VALUE,
-                        dataList = it,
+                        dataList = localUsers,
                         itemPerPage = itemPerPage
                     )
-                    )
-                }
+                )
             }
         }
 
         // Fetch users from remote server if does not exist in local cache
-        val result = userRemoteRepo.fetchUser(itemPerPage, since).getOrNull() ?: emptyArray()
-        result.forEach {
-            userLocalRepo.saveUser(it)
-        }
-
-        return Result.success(
-            ListDataStruct(
-            dataCapacity = Long.MAX_VALUE,
-            dataList = result.toList(),
-            itemPerPage = itemPerPage
-        )
+        val remoteResult = userRemoteRepo.fetchUser(itemPerPage, since)
+        return remoteResult.fold(
+            onSuccess = { array ->
+                val result = array ?: emptyArray()
+                result.forEach {
+                    userLocalRepo.saveUser(it)
+                }
+                Result.success(
+                    ListDataStruct(
+                        dataCapacity = Long.MAX_VALUE,
+                        dataList = result.toList(),
+                        itemPerPage = itemPerPage
+                    )
+                )
+            },
+            onFailure = {
+                Result.failure(it)
+            }
         )
     }
 

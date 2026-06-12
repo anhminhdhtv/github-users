@@ -195,6 +195,7 @@ private fun ErrorStateScreen() {
 @Composable
 fun <T> rememberGenericLazyListState(
     source: ListDataStruct<T>,
+    isRefreshing: Boolean = false,
     isHasFailure: Boolean = false,
     onFetch: ((page: Int) -> Unit)? = null,
     onRefresh: (() -> Unit)? = null,
@@ -212,6 +213,12 @@ fun <T> rememberGenericLazyListState(
     LaunchedEffect(isHasFailure) {
         if (isHasFailure) {
             state.setFailure()
+        }
+    }
+
+    LaunchedEffect(isRefreshing) {
+        if (!isRefreshing) {
+            state.idle()
         }
     }
     return state

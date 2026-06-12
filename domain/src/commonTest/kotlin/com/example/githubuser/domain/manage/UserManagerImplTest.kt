@@ -79,6 +79,23 @@ class UserManagerImplTest {
     }
 
     @Test
+    fun `fetchUser should return failure when remote fetch fails and local cache is empty`() = runTest {
+        // Given
+        every { userLocalRepo.getAllUsers() } returns emptyList()
+        val expectedException = Exception("Network error")
+        everySuspend { userRemoteRepo.fetchUser(20, 0) } returns Result.failure(expectedException)
+
+        // When
+        val result = userManager.fetchUser(itemPerPage = 20, since = 0)
+
+        // Then
+        assertTrue(result.isFailure)
+        assertEquals(expectedException, result.exceptionOrNull())
+        verify(exactly(1)) { userLocalRepo.getAllUsers() }
+        verifySuspend(exactly(1)) { userRemoteRepo.fetchUser(20, 0) }
+    }
+
+    @Test
     fun `fetchUserDetail should return local user if user exists and is in detail`() = runTest {
         // Given
         val localUser = User(id = 1, username = "john", isInDetail = true)

@@ -24,6 +24,7 @@ fun UsersScreenContent(
 ) {
     val listState = rememberGenericLazyListState(
         source = contentState.users,
+        isRefreshing = contentState.isRefreshing,
         isHasFailure = contentState.isHasFailure,
         onFetch = { page ->
             onFetch(page, false)

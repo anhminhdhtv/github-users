@@ -48,32 +48,31 @@ class UsersViewModelImpl(
 
     override fun fetch(page: Int, isRefresh: Boolean) = viewModelScope.launch {
         if (isRefresh) {
-            runCatching {
-                removeAllUserUseCase.invoke(Unit)
-            }.fold(
-                onSuccess = {
-                    _isRefreshing.value = false
-                },
-                onFailure = {
-                    _isRefreshing.value = false
-                    _isHasFailure.value = true
-                }
-            )
+            _isRefreshing.value = true
+            _isHasFailure.value = false
         }
         val users = _users.value
-        val since = if (users.dataList.isEmpty()) 0 else users.dataList.last().id
+        val since = if (isRefresh || users.dataList.isEmpty()) 0 else users.dataList.last().id
         val config = FetchUserConfig(10, since)
 
         fetchUserUseCase.invoke(config).fold(
             onSuccess = {
+                if (isRefresh) {
+                    runCatching {
+                        removeAllUserUseCase.invoke(Unit)
+                    }
+                }
+                _isRefreshing.value = false
                 _isHasFailure.value = false
-                _users.value = users.append(it)
+                _users.value = if (isRefresh) ListDataStruct<User>().append(it) else users.append(it)
             },
             onFailure = {
+                _isRefreshing.value = false
                 if (users.dataList.isEmpty()) {
                     _isHasFailure.value = true
+                } else {
+                    _usersEvent.emit(UsersEvent.ShowErrorMessage(it.toUserFriendlyMessage()))
                 }
-                _isHasFailure.value = true
             }
         )
     }
@@ -82,5 +81,19 @@ class UsersViewModelImpl(
         viewModelScope.launch {
             _usersEvent.emit(UsersEvent.NavigateToDetail(username))
         }
+    }
+}
+
+private fun Throwable.toUserFriendlyMessage(): String {
+    val message = this.message ?: ""
+    return if (message.contains("resolve host", ignoreCase = true) ||
+        message.contains("connect", ignoreCase = true) ||
+        message.contains("network", ignoreCase = true) ||
+        message.contains("timeout", ignoreCase = true) ||
+        message.contains("address", ignoreCase = true)
+    ) {
+        "Connection error. Please check your internet connection and try again."
+    } else {
+        "An unexpected error occurred. Please try again later."
     }
 }

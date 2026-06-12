@@ -45,16 +45,14 @@ class DetailViewModelImpl(val fetchUserDetailUseCase: FetchUserDetailUseCase) :
             return@launch
         }
         _isLoading.value = true
-        runCatching {
-            fetchUserDetailUseCase.invoke(userName)
-        }.fold(
+        fetchUserDetailUseCase.invoke(userName).fold(
             onSuccess = {
-                _userDetail.value = it.getOrNull()
+                _userDetail.value = it
                 _isLoading.value = false
             },
             onFailure = {
                 _isLoading.value = false
-                _detailEvent.emit(DetailEvent.ShowErrorMessage(it.message ?: "Something went wrong"))
+                _detailEvent.emit(DetailEvent.ShowErrorMessage(it.toUserFriendlyMessage()))
             }
         )
     }
@@ -63,5 +61,19 @@ class DetailViewModelImpl(val fetchUserDetailUseCase: FetchUserDetailUseCase) :
         viewModelScope.launch {
             _detailEvent.emit(DetailEvent.NavigateBack)
         }
+    }
+}
+
+private fun Throwable.toUserFriendlyMessage(): String {
+    val message = this.message ?: ""
+    return if (message.contains("resolve host", ignoreCase = true) ||
+        message.contains("connect", ignoreCase = true) ||
+        message.contains("network", ignoreCase = true) ||
+        message.contains("timeout", ignoreCase = true) ||
+        message.contains("address", ignoreCase = true)
+    ) {
+        "Connection error. Please check your internet connection and try again."
+    } else {
+        "An unexpected error occurred. Please try again later."
     }
 }

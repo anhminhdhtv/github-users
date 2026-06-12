@@ -1,6 +1,9 @@
 package com.example.githubuser.feature.detail.screen
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,11 +25,16 @@ fun DetailRoute(
     val contentState = detailViewModel.contentState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    DetailScreenContent(
-        modifier = modifier,
-        detailScreenUiState = contentState.value,
-        onNavigationBack = { detailViewModel.navigationBack() }
-    )
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        modifier = modifier
+    ) { padding ->
+        DetailScreenContent(
+            modifier = Modifier.padding(padding),
+            detailScreenUiState = contentState.value,
+            onNavigationBack = { detailViewModel.navigationBack() }
+        )
+    }
 
     LaunchedEffect(Unit) {
         detailViewModel.init(userName)
