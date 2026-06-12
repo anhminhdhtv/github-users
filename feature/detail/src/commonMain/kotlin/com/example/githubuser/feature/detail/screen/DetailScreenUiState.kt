@@ -6,7 +6,7 @@ data class DetailScreenUiState(
     val userDetail: User? = null,
     val isLoading: Boolean = false
 ) {
-    companion object{
+    companion object {
         val initial = DetailScreenUiState(
             userDetail = null,
             isLoading = false

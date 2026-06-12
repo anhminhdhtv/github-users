@@ -10,7 +10,7 @@ import com.example.githubusers.core.navigation.FeatureNavigationRegistrar
 import com.example.githubusers.core.navigation.UsersRouteData
 import com.example.githubuser.feature.users.screen.UsersRoute
 
-class UsersNavigationProvider : FeatureNavigationProvider{
+class UsersNavigationProvider : FeatureNavigationProvider {
     override val featureNavigationRegistrar: FeatureNavigationRegistrar = object : FeatureNavigationRegistrar {
         override fun NavGraphBuilder.registerComposable(callbacks: FeatureNavigationCallbacks) {
             composable<UsersRouteData> { _ ->
