@@ -25,7 +25,6 @@ class UserRemoteRepoImpl(
         withContext(dispatchers.io) {
             runCatching {
                 userApi.fetchUserDetail(userName = userName).mapToUser()
-
             }
         }
 }

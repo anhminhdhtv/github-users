@@ -37,11 +37,13 @@ class UserManagerImpl(
                 if (it.isNotEmpty()) {
                     // Set flag to true if data exists in local cache
                     isHasDbData = true
-                    return Result.success(ListDataStruct(
+                    return Result.success(
+                        ListDataStruct(
                         dataCapacity = Long.MAX_VALUE,
                         dataList = it,
                         itemPerPage = itemPerPage
-                    ))
+                    )
+                    )
                 }
             }
         }
@@ -52,13 +54,14 @@ class UserManagerImpl(
             userLocalRepo.saveUser(it)
         }
 
-        return Result.success(ListDataStruct(
+        return Result.success(
+            ListDataStruct(
             dataCapacity = Long.MAX_VALUE,
             dataList = result.toList(),
             itemPerPage = itemPerPage
-        ))
+        )
+        )
     }
-
 
     /**
      * Method to get user detail from local cache or remote server.

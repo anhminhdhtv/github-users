@@ -56,5 +56,4 @@ class ApiClient(val httpClient: HttpClient) {
 
     fun buildRequestData(block: HttpRequestBuilder.() -> Unit) =
         HttpRequestBuilder().apply(block)
-
 }

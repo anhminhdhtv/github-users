@@ -32,5 +32,5 @@ jobs:
       - name: Run tests
         run: ./gradlew test
 
-      - name: Check iOS target compilation
-        run: ./gradlew compileTestKotlinIosX64
+      - name: Run detek
+        run: ./gradlew detek

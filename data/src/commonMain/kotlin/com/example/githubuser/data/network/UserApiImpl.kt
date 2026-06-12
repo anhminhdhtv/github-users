@@ -4,13 +4,8 @@ import com.example.githubuser.data.network.infrastructure.MultiValueMap
 import com.example.githubuser.data.network.infrastructure.RequestConfig
 import com.example.githubuser.data.network.infrastructure.RequestMethod
 import com.example.githubuser.data.network.infrastructure.ApiClient
-import com.example.githubuser.data.network.infrastructure.Response
 import com.example.githubuser.data.network.model.UserDto
 import io.ktor.client.call.body
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType.Application.Json
-import kotlinx.serialization.json.Json
 
 class UserApiImpl(
     val httpClient: ApiClient

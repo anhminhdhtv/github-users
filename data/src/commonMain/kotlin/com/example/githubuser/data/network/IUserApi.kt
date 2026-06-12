@@ -2,7 +2,6 @@ package com.example.githubuser.data.network
 
 import com.example.githubuser.data.network.model.UserDto
 
-
 interface IUserApi {
 
     /**
