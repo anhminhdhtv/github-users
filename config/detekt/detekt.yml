@@ -145,6 +145,11 @@ exceptions:
       - 'Throwable'
       - 'RuntimeException'
 
+style:
+  active: true
+  NewLineAtEndOfFile:
+    active: false
+
 formatting:
   active: true
   android: true
@@ -172,9 +177,9 @@ formatting:
   Filename:
     active: true
   FinalNewline:
-    active: true
-    autoCorrect: true
-    insertFinalNewLine: true
+    active: false
+    autoCorrect: false
+    insertFinalNewLine: false
   ImportOrdering:
     active: false
     autoCorrect: false

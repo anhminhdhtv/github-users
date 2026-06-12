@@ -16,14 +16,16 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class DetailViewModelImpl(val fetchUserDetailUseCase: FetchUserDetailUseCase) : ViewModel(),
+class DetailViewModelImpl(val fetchUserDetailUseCase: FetchUserDetailUseCase) :
+    ViewModel(),
     DetailViewModel {
     private val _userDetail = MutableStateFlow<User?>(User())
     private val _isLoading = MutableStateFlow(false)
     private val _detailEvent = MutableSharedFlow<DetailEvent>()
 
     override val contentState: StateFlow<DetailScreenUiState> = combine(
-        _userDetail, _isLoading
+        _userDetail,
+        _isLoading
     ) { userDetail, isLoading ->
         DetailScreenUiState(
             userDetail = userDetail,

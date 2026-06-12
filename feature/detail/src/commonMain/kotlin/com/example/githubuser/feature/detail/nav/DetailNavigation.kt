@@ -11,7 +11,7 @@ import com.example.githubusers.core.navigation.FeatureNavigationProvider
 import com.example.githubusers.core.navigation.FeatureNavigationRegistrar
 import com.example.githubuser.feature.detail.screen.DetailRoute
 
-class DetailNavigationProvider : FeatureNavigationProvider{
+class DetailNavigationProvider : FeatureNavigationProvider {
     override val featureNavigationRegistrar: FeatureNavigationRegistrar = object : FeatureNavigationRegistrar {
         override fun NavGraphBuilder.registerComposable(callbacks: FeatureNavigationCallbacks) {
             composable<DetailRouteData> { backStackEntry ->

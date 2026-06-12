@@ -29,7 +29,6 @@ import coil3.compose.AsyncImage
 import com.example.githubuser.ui.components.extension.shimmerEffect
 import androidx.compose.material3.MaterialTheme
 
-
 @Composable
 private fun UserCard(
     content: @Composable () -> Unit
@@ -38,9 +37,7 @@ private fun UserCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-//            .clickable(enabled = onClick != null, onClick = onClick ?: {})
-        ,
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Adjust this value if needed

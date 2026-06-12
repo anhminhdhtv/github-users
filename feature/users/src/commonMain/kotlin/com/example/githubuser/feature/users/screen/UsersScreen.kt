@@ -15,7 +15,6 @@ import com.example.githubusers.resources.github_users
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
 @Composable
 fun UsersScreenContent(
     modifier: Modifier = Modifier,
@@ -64,4 +63,3 @@ fun UsersScreenPreview() {
         )
     )
 }
-

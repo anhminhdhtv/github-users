@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.String
 
 interface DetailViewModel {
-    val contentState : StateFlow<DetailScreenUiState>
-    val detailEvent : SharedFlow<DetailEvent>
+    val contentState: StateFlow<DetailScreenUiState>
+    val detailEvent: SharedFlow<DetailEvent>
     fun init(userName: String): Job
     fun navigationBack()
 }

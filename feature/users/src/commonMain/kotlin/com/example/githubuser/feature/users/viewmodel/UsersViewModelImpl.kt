@@ -31,7 +31,8 @@ class UsersViewModelImpl(
     override val contentState: StateFlow<UsersScreenUiState> =
         combine(
             _users,
-            _isRefreshing, _isHasFailure
+            _isRefreshing,
+            _isHasFailure
         ) { users, isRefreshing, isHasFailure ->
             UsersScreenUiState(
                 users = users,
@@ -44,7 +45,6 @@ class UsersViewModelImpl(
             initialValue = UsersScreenUiState.initial
         )
     override val usersEvent: SharedFlow<UsersEvent> = _usersEvent.asSharedFlow()
-
 
     override fun fetch(page: Int, isRefresh: Boolean) = viewModelScope.launch {
         if (isRefresh) {
@@ -76,7 +76,6 @@ class UsersViewModelImpl(
                 _isHasFailure.value = true
             }
         )
-
     }
 
     override fun navigateToDetail(username: String) {

@@ -43,7 +43,8 @@ fun CustomTopBar(text: String, onBackClick: (() -> Unit)? = null) {
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .clickable { onBackClick?.invoke() },
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back",
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
                     tint = MaterialTheme.colorScheme.scrim
                 )
             }

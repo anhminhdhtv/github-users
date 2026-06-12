@@ -39,7 +39,6 @@ import com.example.githubusers.resources.user_details
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
 @Composable
 fun DetailScreenContent(
     modifier: Modifier,
