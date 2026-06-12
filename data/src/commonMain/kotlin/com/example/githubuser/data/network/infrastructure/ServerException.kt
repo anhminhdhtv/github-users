@@ -1,6 +1,5 @@
 package com.example.githubuser.data.network.infrastructure
 
-
 /**
  * Exception thrown when a server error occurs
  */

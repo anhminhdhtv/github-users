@@ -7,12 +7,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.githubuser.nav.AppNavHost
 import com.example.githubuser.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinContext
 
 @Composable
 @Preview
 fun App() = AppTheme {
-    AppNavHost(
-        navController = rememberNavController(),
-        modifier = Modifier.fillMaxSize()
-    )
+    KoinContext {
+        AppNavHost(
+            navController = rememberNavController(),
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }

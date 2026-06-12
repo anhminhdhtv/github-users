@@ -8,6 +8,7 @@ dependencies {
     compileOnly(libs.android.gradlePlugin) //if targeting Android
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin) //if you are using Compose Multiplatform
+    implementation(libs.detekt.gradlePlugin)
 }
 
 tasks {

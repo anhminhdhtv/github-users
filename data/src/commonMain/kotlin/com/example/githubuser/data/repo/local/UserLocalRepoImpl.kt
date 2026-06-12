@@ -4,7 +4,7 @@ import com.example.githubusers.core.model.User
 import com.example.githubuser.data.cache.UserDb
 import com.example.githubuser.data.local.IUserLocal
 
-class UserLocalRepoImpl(private val userLocal: IUserLocal):
+class UserLocalRepoImpl(private val userLocal: IUserLocal) :
     IUserLocalRepo {
     override fun getAllUsers(): List<User> {
         return userLocal.getAllUsers().map { it.toUser() }

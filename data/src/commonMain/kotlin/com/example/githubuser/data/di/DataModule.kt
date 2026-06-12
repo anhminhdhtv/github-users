@@ -64,6 +64,4 @@ val dataModule = module {
 
     single<IUserLocal> { UserLocalImpl(get()) }
     single<IUserLocalRepo> { UserLocalRepoImpl(get()) }
-
-
 }
